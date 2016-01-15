@@ -6,6 +6,8 @@
     "start": "react-native start"
   },
   "dependencies": {
+    "lodash": "^4.0.0",
+    "moment": "^2.11.1",
     "react-native": "^0.17.0"
   }
 }
