@@ -106,7 +106,6 @@ var HomeScene = React.createClass({
                         <Text></Text>
                     </View>
                 </View>
-                <Image source={require('../resources/images/bg.png')} style={styles.bgImage} />
             </View>
         );
     }
@@ -116,10 +115,6 @@ var styles = StyleSheet.create({
     container: {
         flex: 1,
         flexDirection: 'column'
-    },
-    bgImage: {
-        flex: 1,
-        resizeMode: 'stretch'
     },
     swiper: {
         height: 220
