@@ -12,8 +12,9 @@ let {
     TouchableOpacity,
     TouchableHighlight,
     StyleSheet
-    } = React;
+} = React;
 
+import Header from './header';
 import Swiper from '../libs/Swiper';
 import CalendarScene from './calendar';
 
@@ -74,6 +75,7 @@ var HomeScene = React.createClass({
     render: function () {
         return (
             <View style={styles.container}>
+                <Header />
                 <Swiper style={styles.swiper}>
                     <View style={styles.slide1}>
                         <Text style={styles.text}>Hello Swiper</Text>
@@ -111,7 +113,7 @@ var HomeScene = React.createClass({
     }
 });
 
-var styles = StyleSheet.create({
+const styles = StyleSheet.create({
     container: {
         flex: 1,
         flexDirection: 'column'

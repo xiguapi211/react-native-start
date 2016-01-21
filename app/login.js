@@ -5,6 +5,7 @@
 'use strict';
 
 import React from 'react-native';
+import dismissKeyboard from 'dismissKeyboard';
 
 let {
     Image,
@@ -12,8 +13,10 @@ let {
     Text,
     TextInput,
     TouchableHighlight,
+    TouchableWithoutFeedback,
     StyleSheet
-    } = React;
+} = React;
+
 
 import {COLOR_NAME, COLOR} from './def';
 
@@ -23,6 +26,9 @@ var LoginScene = React.createClass({
         return {};
     },
     handler: {
+        _dismiss: function () {
+            dismissKeyboard();
+        },
         _submit: function () {
             this.props.onFinished({code: 0, username: 'ray', display: '西瓜皮'});
         }
@@ -30,6 +36,7 @@ var LoginScene = React.createClass({
     render: function () {
         let { themeColor } = this.props;
         return (
+            <TouchableWithoutFeedback onPress={this.handler._dismiss.bind(this)}>
             <View style={styles.container}>
                 <View style={styles.logo}>
                     <Image source={require('../resources/images/logo.png')} style={styles.logoImg} />
@@ -52,11 +59,12 @@ var LoginScene = React.createClass({
                     <View style={[styles.button, {backgroundColor: COLOR[`${themeColor}500`].color}]}><Text style={styles.buttonText}>SIGN IN</Text></View>
                 </TouchableHighlight>
             </View>
+            </TouchableWithoutFeedback>
         );
     }
 });
 
-var styles = StyleSheet.create({
+const styles = StyleSheet.create({
     container: {
         flex: 1,
         flexDirection: 'column',

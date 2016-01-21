@@ -14,7 +14,7 @@ let {
     NavigationBar,
     PixelRatio,
     StyleSheet
-    } = React;
+} = React;
 
 import HomeScene from './home';
 import DrawerLayout from '../libs/DrawerLayout';
@@ -62,26 +62,19 @@ var MainScene = React.createClass({
                     ref="navi"
                     renderScene={this.renderScene}
                     initialRoute={{
-                        title: 'Hello React',
                         component: HomeScene
                     }}
                     configureScene={() => {
                         return Navigator.SceneConfigs.FloatFromRight;
                     }}
                     tintColor="#008888"
-                    navigationBar={
-                        <Navigator.NavigationBar
-                            routeMapper={NavigationBarRouteMapper}
-                            style={styles.navBar}
-                        />
-                    }
                     />
             </DrawerLayout>
         );
     }
 });
 
-var styles = StyleSheet.create({
+const styles = StyleSheet.create({
     container: {
         marginTop: 18,
         flexDirection: 'column'
