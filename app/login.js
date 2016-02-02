@@ -17,7 +17,6 @@ let {
     StyleSheet
 } = React;
 
-
 import {COLOR_NAME, COLOR} from './def';
 
 var LoginScene = React.createClass({

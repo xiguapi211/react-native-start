@@ -49,7 +49,7 @@ var MainScene = React.createClass({
     render: function () {
         var navigationView = (
             <View style={styles.drawer}>
-                <Text style={{margin: 10, fontSize: 15, textAlign: 'left'}}>I'm in the Drawer!</Text>
+                <Text style={{margin: 10, fontSize: 15, textAlign: 'left'}}>Im in the Drawer!</Text>
             </View>
         );
         return (

@@ -10,7 +10,7 @@ let {
     View,
     Text,
     StyleSheet
-    } = React;
+} = React;
 
 import Calendar from '../libs/Calendar';
 

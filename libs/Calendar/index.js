@@ -75,7 +75,7 @@ export default class Calendar extends React.Component {
         nextButtonText: 'Next',
         titleFormat: 'YYYY MM',
         weekHeadings: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'],
-        startDate: '2016-01-01',//moment().format('YYYY-MM-DD'),
+        startDate: moment().format('YYYY-MM-DD'),
         customStyle: {}
     };
 
@@ -172,7 +172,7 @@ export default class Calendar extends React.Component {
                     days.push(<Day key={x} filler={true} style={styles.dayButton} />);
                 }
             }
-            weekRows.push(<View key={weekRows.lenght} style={[styles.weekRow, this.props.customStyle.weekRow]}>{days}</View>);
+            weekRows.push(<View key={weekRows.length} style={[styles.weekRow, this.props.customStyle.weekRow]}>{days}</View>);
         }
         renderedMonthView = <View key={moment(newDay).month()} style={styles.monthContainer}>{weekRows}</View>;
         this.renderedMonths.push([date, renderedMonthView]);
@@ -194,7 +194,7 @@ export default class Calendar extends React.Component {
                     <ScrollView>
                     </ScrollView>
                     :
-                    <View>
+                    <View ref="calendar">
                         {this.state.calendarDates.map((date) => { return this.renderMonth(date) })}
                     </View>
                 }
