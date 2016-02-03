@@ -18,7 +18,9 @@ var CalendarScene = React.createClass({
     render: function () {
         return (
             <View style={styles.container}>
-                <Calendar>
+                <Calendar
+                    scrollEnabled={true}
+                    onDateSelected={ (date) => console.log('selected date', date) }>
                 </Calendar>
             </View>
         );

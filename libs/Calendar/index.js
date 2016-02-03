@@ -22,9 +22,12 @@ import _ from 'lodash';
 const MAX_COLUMNS = 7;
 const MAX_ROWS = 7;
 const DEVICE_WIDTH = parseInt(Dimensions.get('window').width);
+const VIEW_INDEX = 1;
 
 let Day = React.createClass({
     propTypes: {
+        isToday: PropTypes.bool,
+        isSelected: PropTypes.bool,
         currentDay: PropTypes.number,
         filler: PropTypes.bool,
         customStyle: PropTypes.object
@@ -34,8 +37,42 @@ let Day = React.createClass({
             customStyle: {},
         }
     },
+    _getDayFillerStyle (isToday, isSelected) {
+        var dayStyle = [styles.dayCircleFiller];
+        if (isToday) {
+            //console.log('styles.currentDayCircle', styles.currentDayCircle);
+            dayStyle.push(styles.currentDayCircle);
+            if (this.props.customStyle.currentDayCircle) {
+                dayStyle.push(this.props.customStyle.currentDayCircle);
+            }
+        }
+        if (isSelected) {
+            //console.log('styles.selectedDayCircle', styles.selectedDayCircle);
+            dayStyle.push(styles.selectedDayCircle);
+            if (this.props.customStyle.selectedDayCircle) {
+                dayStyle.push(this.props.customStyle.selectedDayCircle);
+            }
+        }
+        return dayStyle;
+    },
+    _getDayTextStyle (isToday, isSelected) {
+        var dayTextStyle = [styles.day, this.props.customStyle.day];
+        if (isToday) {
+            dayTextStyle.push(styles.currentDayText);
+            if (this.props.customStyle.currentDayText) {
+                dayTextStyle.push(this.props.customStyle.currentDayText);
+            }
+        }
+        if (isSelected) {
+            dayTextStyle.push(styles.selectedDayText);
+            if (this.props.customStyle.selectedDayText) {
+                dayTextStyle.push(this.props.customStyle.selectedDayText);
+            }
+        }
+        return dayTextStyle;
+    },
     render: function () {
-        let { currentDay, filler } = this.props;
+        let { currentDay, isToday, isSelected, filler } = this.props;
         if (filler) {
             return (
                 <View style={[styles.dayButtonFiller, this.props.customStyle.dayButtonFiller]}>
@@ -43,10 +80,13 @@ let Day = React.createClass({
                 </View>
             );
         } else {
+            // console.log('isToday, isSelected', isToday, isSelected);
             return (
                 <TouchableOpacity>
                     <View style={[styles.dayButton, this.props.customStyle.dayButton]}>
-                        <Text>{currentDay + 1}</Text>
+                        <View style={this._getDayFillerStyle(isToday, isSelected)}>
+                            <Text style={this._getDayTextStyle(isToday, isSelected)}>{currentDay + 1}</Text>
+                        </View>
                     </View>
                 </TouchableOpacity>
             );
@@ -63,9 +103,11 @@ export default class Calendar extends React.Component {
         titleFormat: PropTypes.string,
         weekHeadings: PropTypes.array,
         startDate: PropTypes.string,
+        selectedDate: PropTypes.string,
         customStyle: PropTypes.object,
         onTouchPrev: PropTypes.func,
-        onTouchNext: PropTypes.func
+        onTouchNext: PropTypes.func,
+        onDateSelected: PropTypes.func
     };
 
     static defaultProps = {
@@ -82,7 +124,8 @@ export default class Calendar extends React.Component {
     constructor (props, context) {
         super(props, context);
         this.state = {
-            calendarDates: this._getInitStack(),
+            calendarDates: this._getInitStack(),    // 堆栈中存在的月
+            selectedDate: moment(this.props.selectedDate).format(),
             currentMonth: moment(this.props.startDate).format()
         }
     }
@@ -92,7 +135,59 @@ export default class Calendar extends React.Component {
     }
 
     componentDidMount () {
+        this._scrollToCalendar(VIEW_INDEX);
+    }
 
+    _onPrev () {
+        this._prependMonth();
+        this._scrollToCalendar(VIEW_INDEX);
+    }
+
+    _onNext () {
+        this._appendMonth();
+        this._scrollToCalendar(VIEW_INDEX);
+    }
+
+    _onScrollEnd (event) {
+        var position = event.nativeEvent.contentOffset.x;
+        var currItem = position / DEVICE_WIDTH;
+
+        if (currItem < VIEW_INDEX) {
+            this._prependMonth();
+            this._scrollToCalendar(VIEW_INDEX);
+        } else {
+            this._appendMonth();
+            this._scrollToCalendar(VIEW_INDEX);
+        }
+    }
+
+    _scrollToCalendar (itemIndex) {
+        let scrollX = itemIndex * DEVICE_WIDTH;
+        if (this.props.scrollEnabled) {
+            this.refs.calendar.scrollWithoutAnimationTo(0, scrollX);
+        }
+    }
+
+    // 向前添加一月
+    _prependMonth () {
+        var calendarDates = this.state.calendarDates;
+        calendarDates.unshift(moment(calendarDates[0]).subtract(1, 'month').format());
+        calendarDates.pop();
+        this.setState({
+            calendarDates: calendarDates,
+            currentMonth: calendarDates[this.props.scrollEnabled ? VIEW_INDEX : 0]
+        });
+    }
+
+    // 向后添加一月
+    _appendMonth () {
+        var calendarDates = this.state.calendarDates;
+        calendarDates.push(moment(calendarDates[calendarDates.length - 1]).add(1, 'month').format());
+        calendarDates.shift();  // 去掉最前一月
+        this.setState({
+            calendarDates: calendarDates,
+            currentMonth: calendarDates[this.props.scrollEnabled ? VIEW_INDEX : 0]
+        });
     }
 
     renderTopBar () {
@@ -100,13 +195,13 @@ export default class Calendar extends React.Component {
         if (this.props.showControls) {
             return (
                 <View style={[styles.calendarControls, this.props.customStyle.calendarControls]}>
-                    <TouchableOpacity style={[styles.controlButton, this.props.customStyle.controlButton]} onPress={this._onPrev}>
+                    <TouchableOpacity style={[styles.controlButton, this.props.customStyle.controlButton]} onPress={this._onPrev.bind(this)}>
                         <Text style={[styles.controlButtonText, this.props.customStyle.controlButtonText]}>{this.props.prevButtonText}</Text>
                     </TouchableOpacity>
                     <Text style={[styles.title, this.props.customStyle.title]}>
                         {title}
                     </Text>
-                    <TouchableOpacity style={[styles.controlButton, this.props.customStyle.controlButton]} onPress={this._onNext}>
+                    <TouchableOpacity style={[styles.controlButton, this.props.customStyle.controlButton]} onPress={this._onNext.bind(this)}>
                         <Text style={[styles.controlButtonText, this.props.customStyle.controlButtonText]}>{this.props.nextButtonText}</Text>
                     </TouchableOpacity>
                 </View>
@@ -151,15 +246,18 @@ export default class Calendar extends React.Component {
                     days.push(<Day key={`${i},${j}`} filler={true} style={styles.dayButton} />);
                 } else {
                     var newDay = moment(dayStart).set('date', currentDay + 1);
+                    var isToday = (moment().isSame(newDay, 'month') && moment().isSame(newDay, 'day'));
+                    var isSelected = (moment(this.state.selectedDate).isSame(newDay, 'month') && moment(this.state.selectedDate).isSame(newDay, 'day'));
                     if (currentDay < daysInMonth) {
                         days.push(
                             <Day
                                 key={`${i},${j}`}
-                                style={styles.dayButton}
                                 currentDay={currentDay}
+                                isToday={isToday}
+                                isSelected={isSelected}
                                 filler={false}
                                 customStyle={this.props.customStyle}
-                                />
+                            />
                         );
                     }
                     currentDay++;
@@ -191,7 +289,18 @@ export default class Calendar extends React.Component {
                 {this.renderTopBar()}
                 {this.renderHeading()}
                 {this.props.scrollEnabled ?
-                    <ScrollView>
+                    <ScrollView
+                        ref='calendar'
+                        horizontal={true}
+                        scrollEnabled={true}
+                        pagingEnabled={true}
+                        removeClippedSubviews={true}
+                        scrollEventThrottle={600}
+                        showsHorizontalScrollIndicator={false}
+                        automaticallyAdjustContentInsets={false}
+                        onMomentumScrollEnd={(event) => this._onScrollEnd(event)}
+                    >
+                        {this.state.calendarDates.map((date) => { return this.renderMonth(date) })}
                     </ScrollView>
                     :
                     <View ref="calendar">
@@ -206,15 +315,12 @@ export default class Calendar extends React.Component {
         let _stack = [];
         let { startDate } = this.props;
         if (this.props.scrollEnabled) {
-            _stack.push(moment(startDate).subtract(2, 'month').format());
             _stack.push(moment(startDate).subtract(1, 'month').format());
             _stack.push(moment(startDate).format());
             _stack.push(moment(startDate).add(1, 'month').format());
-            _stack.push(moment(startDate).add(2, 'month').format());
         } else {
             _stack.push(moment(startDate).format())
         }
-        console.log('_stack', _stack);
         return _stack;
     }
 }
@@ -267,14 +373,34 @@ let styles = StyleSheet.create({
         padding: 5,
         width: DEVICE_WIDTH / 7,
         borderTopWidth: 1,
-        borderTopColor: '#333',
+        borderTopColor: 'red',
     },
     dayButtonFiller: {
         padding: 5,
         width: DEVICE_WIDTH / 7
     },
+    dayCircleFiller: {
+        justifyContent: 'center',
+        backgroundColor: 'transparent',
+        width: 28,
+        height: 28,
+        borderRadius: 14
+    },
+    currentDayCircle: {
+        backgroundColor: '#343434'
+    },
+    currentDayText: {
+        color: 'red'
+    },
+    selectedDayCircle: {
+        backgroundColor: '#333'
+    },
+    selectedDayText: {
+        color: 'white',
+        fontWeight: 'bold'
+    },
     day: {
         fontSize: 16,
-        alignSelf: 'center',
+        alignSelf: 'center'
     }
 });
