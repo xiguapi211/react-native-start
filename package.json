@@ -8,6 +8,8 @@
   "dependencies": {
     "lodash": "^4.0.0",
     "moment": "^2.11.1",
-    "react-native": "^0.17.0"
+    "react-native": "^0.17.0",
+    "react-native-localization": "^0.1.11",
+    "react-native-vector-icons": "^1.1.1"
   }
 }

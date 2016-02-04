@@ -18,6 +18,7 @@ let {
 } = React;
 
 import {COLOR_NAME, COLOR} from './def';
+import {BASE_LABEL_STR} from '../libs/Utils/localization';
 
 var LoginScene = React.createClass({
     // 定义初始状态
@@ -55,7 +56,9 @@ var LoginScene = React.createClass({
                 <TouchableHighlight
                     onPress={this.handler._submit.bind(this)}
                     underlayColor="#eee">
-                    <View style={[styles.button, {backgroundColor: COLOR[`${themeColor}500`].color}]}><Text style={styles.buttonText}>SIGN IN</Text></View>
+                    <View style={[styles.button, {backgroundColor: COLOR[`${themeColor}500`].color}]}>
+                        <Text style={styles.buttonText}>{BASE_LABEL_STR.LOGIN}</Text>
+                    </View>
                 </TouchableHighlight>
             </View>
             </TouchableWithoutFeedback>

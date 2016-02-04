@@ -2,8 +2,7 @@
  * Created by ray on 15/12/13.
  */
 'use strict';
-//
-export const WEEK_HEADINGS = ['一', '二', '三', '四', '五', '六', '日'];
+
 // 颜色风格
 export const COLOR_NAME = ['googleBlue', 'googleGreen', 'googleGrey', 'googleRed', 'googleYellow', 'paperAmber',
     'paperBlue', 'paperBlueGrey', 'paperBrown', 'paperCyan', 'paperDeepOrange', 'paperDeepPurple', 'paperGreen',

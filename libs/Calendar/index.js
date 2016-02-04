@@ -5,6 +5,7 @@
 'use strict';
 
 import React from 'react-native';
+import Icon from 'react-native-vector-icons/MaterialIcons';
 
 let {
     Dimensions,
@@ -13,8 +14,11 @@ let {
     Text,
     TouchableOpacity,
     PropTypes,
+    PixelRatio,
     StyleSheet
-    } = React;
+} = React;
+
+import {BASE_LABEL_STR} from '../Utils/localization';
 
 import moment from 'moment';
 import _ from 'lodash';
@@ -26,11 +30,13 @@ const VIEW_INDEX = 1;
 
 let Day = React.createClass({
     propTypes: {
+        newDay: PropTypes.object,
         isToday: PropTypes.bool,
         isSelected: PropTypes.bool,
         currentDay: PropTypes.number,
         filler: PropTypes.bool,
-        customStyle: PropTypes.object
+        customStyle: PropTypes.object,
+        onPress: PropTypes.func
     },
     getDefaultProps () {
         return {
@@ -40,14 +46,12 @@ let Day = React.createClass({
     _getDayFillerStyle (isToday, isSelected) {
         var dayStyle = [styles.dayCircleFiller];
         if (isToday) {
-            //console.log('styles.currentDayCircle', styles.currentDayCircle);
             dayStyle.push(styles.currentDayCircle);
             if (this.props.customStyle.currentDayCircle) {
                 dayStyle.push(this.props.customStyle.currentDayCircle);
             }
         }
         if (isSelected) {
-            //console.log('styles.selectedDayCircle', styles.selectedDayCircle);
             dayStyle.push(styles.selectedDayCircle);
             if (this.props.customStyle.selectedDayCircle) {
                 dayStyle.push(this.props.customStyle.selectedDayCircle);
@@ -72,7 +76,7 @@ let Day = React.createClass({
         return dayTextStyle;
     },
     render: function () {
-        let { currentDay, isToday, isSelected, filler } = this.props;
+        let { newDay, currentDay, isToday, isSelected, filler } = this.props;
         if (filler) {
             return (
                 <View style={[styles.dayButtonFiller, this.props.customStyle.dayButtonFiller]}>
@@ -80,9 +84,8 @@ let Day = React.createClass({
                 </View>
             );
         } else {
-            // console.log('isToday, isSelected', isToday, isSelected);
             return (
-                <TouchableOpacity>
+                <TouchableOpacity onPress={() => this.props.onPress(newDay)}>
                     <View style={[styles.dayButton, this.props.customStyle.dayButton]}>
                         <View style={this._getDayFillerStyle(isToday, isSelected)}>
                             <Text style={this._getDayTextStyle(isToday, isSelected)}>{currentDay + 1}</Text>
@@ -116,7 +119,7 @@ export default class Calendar extends React.Component {
         prevButtonText: 'Prev',
         nextButtonText: 'Next',
         titleFormat: 'YYYY MM',
-        weekHeadings: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'],
+        weekHeadings: BASE_LABEL_STR.WEEK_HEADINGS,
         startDate: moment().format('YYYY-MM-DD'),
         customStyle: {}
     };
@@ -146,6 +149,12 @@ export default class Calendar extends React.Component {
     _onNext () {
         this._appendMonth();
         this._scrollToCalendar(VIEW_INDEX);
+    }
+
+    _onPressDate (date) {
+        this.setState({
+            selectedDate: date,
+        });
     }
 
     _onScrollEnd (event) {
@@ -196,13 +205,13 @@ export default class Calendar extends React.Component {
             return (
                 <View style={[styles.calendarControls, this.props.customStyle.calendarControls]}>
                     <TouchableOpacity style={[styles.controlButton, this.props.customStyle.controlButton]} onPress={this._onPrev.bind(this)}>
-                        <Text style={[styles.controlButtonText, this.props.customStyle.controlButtonText]}>{this.props.prevButtonText}</Text>
+                        <Icon name="chevron-left" size={30} style={[styles.controlButtonIcon, this.props.customStyle.controlButtonIcon]} />
                     </TouchableOpacity>
                     <Text style={[styles.title, this.props.customStyle.title]}>
                         {title}
                     </Text>
                     <TouchableOpacity style={[styles.controlButton, this.props.customStyle.controlButton]} onPress={this._onNext.bind(this)}>
-                        <Text style={[styles.controlButtonText, this.props.customStyle.controlButtonText]}>{this.props.nextButtonText}</Text>
+                        <Icon name="chevron-right" size={30} style={[styles.controlButtonIcon, this.props.customStyle.controlButtonIcon]} />
                     </TouchableOpacity>
                 </View>
             );
@@ -252,6 +261,8 @@ export default class Calendar extends React.Component {
                         days.push(
                             <Day
                                 key={`${i},${j}`}
+                                onPress={this._onPressDate.bind(this)}
+                                newDay={newDay}
                                 currentDay={currentDay}
                                 isToday={isToday}
                                 isSelected={isSelected}
@@ -331,24 +342,31 @@ let styles = StyleSheet.create({
         backgroundColor: '#f7f7f7'
     },
     calendarControls: {
-        height: 40,
+        height: 36,
         flexDirection: 'row'
     },
     controlButton: {
     },
     controlButtonText: {
-        fontSize: 15
+        fontSize: 15,
+        color: '#333'
+    },
+    controlButtonIcon: {
+        fontSize: 30,
+        color: '#333'
     },
     title: {
         flex: 1,
         textAlign: 'center',
-        fontSize: 15
+        fontSize: 16
     },
     heading: {
-        height: 40,
+        height: 36,
         flexDirection: 'row',
-        borderTopWidth: 1,
-        borderBottomWidth: 1,
+        borderTopWidth: 1 / PixelRatio.get(),
+        borderBottomWidth: 1 / PixelRatio.get(),
+        borderTopColor: '#dcdcdc',
+        borderBottomColor: '#dcdcdc',
         justifyContent: 'space-around'
     },
     dayHeading: {
@@ -372,8 +390,8 @@ let styles = StyleSheet.create({
         alignItems: 'center',
         padding: 5,
         width: DEVICE_WIDTH / 7,
-        borderTopWidth: 1,
-        borderTopColor: 'red',
+        borderBottomWidth: 1 / PixelRatio.get(),
+        borderBottomColor: '#ccc'
     },
     dayButtonFiller: {
         padding: 5,
@@ -390,10 +408,10 @@ let styles = StyleSheet.create({
         backgroundColor: '#343434'
     },
     currentDayText: {
-        color: 'red'
+        color: 'white'
     },
     selectedDayCircle: {
-        backgroundColor: '#333'
+        backgroundColor: 'red'
     },
     selectedDayText: {
         color: 'white',
