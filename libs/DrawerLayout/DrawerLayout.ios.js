@@ -177,14 +177,12 @@ export default class DrawerLayout extends React.Component {
         if (drawerPosition === 'left') {
             let overlayArea = DEVICE_WIDTH - (DEVICE_WIDTH - this.props.drawerWidth);
             if (this._currOpenValue === 1) {
-                console.log('11');
                 if ((dx < 0 && (Math.abs(dx) > (Math.abs(dy) * 3))) || (moveX > overlayArea)) {
                     this._isClosing = true;
                     this._closingAnchorValue = this._getOpenValueForX(moveX);
                     return true;
                 }
             } else {
-                console.log('222');
                 if (moveX <= 35 && dx > 0) {
                     this._isClosing = false;
                     return true;

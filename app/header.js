@@ -14,6 +14,8 @@ let {
     StyleSheet
 } = React;
 
+import {BASE_LABEL_STR} from '../libs/Utils/localization';
+
 var Header = React.createClass({
     render: function () {
         return(
@@ -21,8 +23,8 @@ var Header = React.createClass({
                 <View style={styles.searchBox}>
                     <Image source={require('../resources/images/icon_search.png')} style={styles.searchIcon}/>
                     <TextInput
-                        keyboardType='web-search'
-                        placeholder='搜索商品/店铺'
+                        keyboardType="web-search"
+                        placeholder={BASE_LABEL_STR.SEARCH_HOLD}
                         style={styles.inputText}/>
                     <Image source={require('../resources/images/icon_voice.png')} style={styles.voiceIcon}/>
                 </View>

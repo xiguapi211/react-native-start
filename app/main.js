@@ -10,32 +10,13 @@ let {
     Text,
     Image,
     View,
-    Navigator,
-    NavigationBar,
+    NavigatorIOS,
     PixelRatio,
     StyleSheet
 } = React;
 
 import HomeScene from './home';
 import DrawerLayout from '../libs/DrawerLayout';
-
-var NavigationBarRouteMapper = {
-    LeftButton: function(route, navigator, index, navState) {
-        return null;
-    },
-    RightButton: function(route, navigator, index, navState) {
-        return null;
-    },
-    Title: function(route, navigator, index, navState) {
-        return (
-            <View style={styles.navBarTitleContainer}>
-                <Text style={[styles.navBarText, styles.navBarTitleText]}>
-                    {route.title}
-                </Text>
-            </View>
-        );
-    }
-};
 
 var MainScene = React.createClass({
     renderScene: function (route, navigator) {
@@ -55,20 +36,19 @@ var MainScene = React.createClass({
         return (
             <DrawerLayout
                 drawerWidth={260}
-                drawerPosition='left'
                 renderNavigationView={() => navigationView}>
-                <Navigator
+                <NavigatorIOS
                     style={styles.container}
                     ref="navi"
-                    renderScene={this.renderScene}
                     initialRoute={{
+                        title: 'Hello',
                         component: HomeScene
                     }}
                     configureScene={() => {
                         return Navigator.SceneConfigs.FloatFromRight;
                     }}
                     tintColor="#008888"
-                    />
+                />
             </DrawerLayout>
         );
     }
@@ -76,7 +56,7 @@ var MainScene = React.createClass({
 
 const styles = StyleSheet.create({
     container: {
-        marginTop: 18,
+        flex: 1,
         flexDirection: 'column'
     },
     drawer: {

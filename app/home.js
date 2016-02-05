@@ -16,7 +16,9 @@ let {
 
 import Header from './header';
 import Swiper from '../libs/Swiper';
+import NewsScene from './news';
 import CalendarScene from './calendar';
+
 
 var MODULE_LIST = [
     {
@@ -53,7 +55,7 @@ var HomeScene = React.createClass({
     getPage: function (module) {
         switch (module.mid) {
             case 'news':
-                return EmptyPage;
+                return NewsScene;
             case 'calendar':
                 return CalendarScene;
             default:
@@ -115,11 +117,12 @@ var HomeScene = React.createClass({
 
 const styles = StyleSheet.create({
     container: {
+        marginTop: 44,
         flex: 1,
         flexDirection: 'column'
     },
     swiper: {
-        height: 220
+        height: 200
     },
     slide1: {
         flex: 1,

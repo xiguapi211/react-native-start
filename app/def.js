@@ -3,6 +3,11 @@
  */
 'use strict';
 
+export const NEWS_API = {
+    KEY: 'MY_APP_KEY',
+    URL: 'http://apis.baidu.com/txapi/keji/keji'
+};
+
 // 颜色风格
 export const COLOR_NAME = ['googleBlue', 'googleGreen', 'googleGrey', 'googleRed', 'googleYellow', 'paperAmber',
     'paperBlue', 'paperBlueGrey', 'paperBrown', 'paperCyan', 'paperDeepOrange', 'paperDeepPurple', 'paperGreen',

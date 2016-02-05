@@ -43,11 +43,11 @@ var LoginScene = React.createClass({
                 </View>
                 <View style={styles.form}>
                     <TextInput
-                        placeholder="username"
+                        placeholder={BASE_LABEL_STR.USERNAME}
                         placeholderTextColor="#dcdcdc"
                         style={styles.input}/>
                     <TextInput
-                        placeholder="password"
+                        placeholder={BASE_LABEL_STR.PASSWORD}
                         placeholderTextColor="#dcdcdc"
                         password={true}
                         keyboardType="numeric"
