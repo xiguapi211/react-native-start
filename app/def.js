@@ -4,8 +4,8 @@
 'use strict';
 
 export const NEWS_API = {
-    KEY: 'MY_APP_KEY',
-    URL: 'http://apis.baidu.com/txapi/keji/keji'
+    KEY: 'your-key',
+    URL: 'http://apis.baidu.com/txapi/world/world'
 };
 
 // 颜色风格

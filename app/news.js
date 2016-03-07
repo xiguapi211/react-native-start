@@ -49,8 +49,10 @@ let NewsScene = React.createClass({
             .then((response) => response.json())
             .then((response) => {
                 let list = [];
+                console.log('response', response);
                 if (response.code === 200) {
-                    list = this._reviseData(response);
+                    list = this._reviseData(response.newslist);
+                    console.log('list', list);
                 }
                 this.setState({
                     isLoading: false,

@@ -17,6 +17,7 @@ let {
 import Header from './header';
 import Swiper from '../libs/Swiper';
 import NewsScene from './news';
+import LifeScene from './life';
 import CalendarScene from './calendar';
 
 
@@ -26,7 +27,7 @@ var MODULE_LIST = [
             {key: '001', mid: 'news', title: '新闻', icon: require('../resources/images/icon_books.png')},
             {key: '002', mid: 'calendar', title: '日历', icon: require('../resources/images/icon_calendar.png')},
             {key: '003', mid: 'anima', title: '动画', icon: require('../resources/images/icon_camera.png')},
-            {key: '004', mid: 'news3', title: '社团汇', icon: require('../resources/images/icon_label.png')}
+            {key: '004', mid: 'life', title: '生活汇', icon: require('../resources/images/icon_label.png')}
         ]
     },
     {
@@ -58,6 +59,8 @@ var HomeScene = React.createClass({
                 return NewsScene;
             case 'calendar':
                 return CalendarScene;
+            case 'life':
+                return LifeScene;
             default:
                 return EmptyPage;
         }

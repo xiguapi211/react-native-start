@@ -12,7 +12,7 @@ let {
     PropTypes,
     PanResponder,
     View
-    } = React;
+} = React;
 
 // 屏幕总宽度
 const DEVICE_WIDTH = parseInt(Dimensions.get('window').width);

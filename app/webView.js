@@ -16,7 +16,7 @@ var WebViewScene = React.createClass({
         console.log('url', this.props.url);
         return (
             <View style={styles.container}>
-                <WebView url={this.props.url} style={styles.webview} />
+                <WebView source={{uri: this.props.url}} style={styles.webview} />
             </View>
         );
     }
